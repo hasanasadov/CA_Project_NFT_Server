@@ -1,12 +1,12 @@
-const data = require("./fake-data");
+const data = require("../fake-data");
 const express = require("express");
+
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 
 const { creators, nfts, users } = data;
 const app = express();
-const port = process.env.PORT || 3000;
 
 const EMAIL_REGEX =
   /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
@@ -20,9 +20,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome our api!");
-});
+app.get("/", (req, res) => res.send("Express on Vercel"));
+app.listen(3000, () => console.log("Server ready on port 3000."));
+
+
 
 app.get("/api", (req, res) => {
   res.status(200).json([
@@ -233,6 +234,6 @@ app.post("/api/register", (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`NFT Marketplace server app listening on port ${port}`);
-});
+
+
+module.exports = app;
