@@ -1,12 +1,12 @@
-const data = require("../fake-data");
+const data = require("./fake-data");
 const express = require("express");
-
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 
 const { creators, nfts, users } = data;
 const app = express();
+const port = process.env.PORT || 3000;
 
 const EMAIL_REGEX =
   /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
@@ -20,10 +20,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
-app.listen(3000, () => console.log("Server ready on port 3000."));
-
-
+app.get("/", (req, res) => {
+  res.send("Welcome our api!");
+});
 
 app.get("/api", (req, res) => {
   res.status(200).json([
@@ -153,6 +152,25 @@ app.post("/api/nfts", (req, res) => {
   }
 });
 
+app.delete("/api/nfts/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "NFT id is required!" });
+    }
+
+    const nftIdx = nfts.findIndex((nft) => nft.id == id);
+    if (nftIdx === -1) {
+      return res.status(404).json({ error: `NFT not found with id: ${id}` });
+    }
+    const deletedNFT = nfts.splice(nftIdx, 1)[0];
+    res.status(200).json(deletedNFT);
+  } catch (error) {
+    res.status(500).json({ error: `Internal Server Error! ${error}` });
+  }
+});
+
 app.post("/api/login", (req, res) => {
   try {
     const { username, password } = req.body;
@@ -234,6 +252,6 @@ app.post("/api/register", (req, res) => {
   }
 });
 
-
-
-module.exports = app;
+app.listen(port, () => {
+  console.log(`NFT Marketplace server app listening on port ${port}`);
+});
