@@ -1,4 +1,4 @@
-const data = require("../fake-data");
+const data = require("./fake-data");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -15,12 +15,7 @@ const PASSWORD_REGEX =
 const validateWithRegex = (text, pattern) => {
   return pattern.test(text);
 };
-const express = require("express");
 
-
-app.listen(3000, () => console.log("Server ready on port 3000."));
-
-module.exports = app;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
